@@ -11,6 +11,30 @@ $config = [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
     ],
+    'modules' => [
+        'admin' => [
+            'class' => 'app\modules\admin\Module',
+            'defaultRoute' => 'main/index',
+        ],
+        'gridview' => [
+            'class' => '\kartik\grid\Module'
+        ],
+        'rbac' => [
+            'class' => 'app\modules\admin\Module',
+            'layout' => 'left-menu', // it can be '@path/to/your/layout'.
+            'controllerMap' => [
+                'assignment' => [
+                    'class' => 'app\admin\controllers\AssignmentController',
+                    'userClassName' => 'app\models\User',
+                    'idField' => 'id',
+                    'usernameField' => 'name'
+                ],
+                'other' => [
+                    'class' => 'path\to\OtherController', // add another controller
+                ],
+            ]
+        ],
+    ],
     'components' => [
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
