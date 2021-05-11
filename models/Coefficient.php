@@ -29,8 +29,8 @@ class Coefficient extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['indicator_type_id'], 'integer'],
-            [['value'], 'number'],
+            [['indicator_type_id', 'level'], 'integer'],
+            [['min', 'max'], 'number'],
             [['indicator_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => IndicatorType::className(), 'targetAttribute' => ['indicator_type_id' => 'id']],
         ];
     }
@@ -43,7 +43,9 @@ class Coefficient extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'indicator_type_id' => 'Тип показника',
-            'value' => 'Значення коефіцієнта',
+            'min' => 'Мінімальне значення рівня',
+            'max' => 'Максимальне значення рівня',
+            'level' => 'Рівень',
         ];
     }
 
@@ -55,5 +57,33 @@ class Coefficient extends \yii\db\ActiveRecord
     public function getIndicatorType()
     {
         return $this->hasOne(IndicatorType::className(), ['id' => 'indicator_type_id']);
+    }
+
+
+    //Queries
+
+    public function getMaxCoefficients()
+    {
+        $indxs = (new \yii\db\Query())
+            ->select(['max(id) as max'])
+            ->from('coefficients')
+            ->groupBy('indicator_type_id')
+            ->all();
+
+        return $this->find()
+            ->select(['indicator_type_id', 'max', 'id'])
+            ->where(['in', 'id', array_map(function ($item) {
+                return $item['max'];
+            }, $indxs)])
+            ->all();
+    }
+
+    public function getMinCoefficients()
+    {
+        return $this->find()
+            ->select(['id', 'min', 'indicator_type_id'])
+            ->from('coefficients')
+            ->groupBy('indicator_type_id')
+            ->all();
     }
 }

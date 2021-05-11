@@ -25,7 +25,20 @@ class CoefsTest extends \Codeception\Test\Unit
     // tests
     public function testCoefficientQuantity()
     {
-        $count = $this->coef->find()->count();
-        expect($count)->equals(1);
+        $count = $this->coef->find()
+            ->groupBy('indicator_type_id')
+            ->count();
+
+        expect($count)->equals(5);
     }
+
+    public function testCountLevelQuantity()
+    {
+        $count = $this->coef->find()
+            ->groupBy('level')
+            ->count();
+
+        expect($count)->equals(6);
+    }
+
 }

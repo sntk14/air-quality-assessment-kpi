@@ -17,10 +17,12 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'indicator_type_id')
         ->dropDownList(ArrayHelper::map(IndicatorTypeRepository::getAll(),'id','name')) ?>
 
-    <?= $form->field($model, 'value')->textInput() ?>
+    <?= $form->field($model, 'min')->textInput() ?>
+    <?= $form->field($model, 'max')->textInput() ?>
+    <?= $form->field($model, 'level')->textInput() ?>
 
     <div class="form-group">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+        <?= Html::submitButton('Зберегти', ['class' => 'btn btn-success']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>
