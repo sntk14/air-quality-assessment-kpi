@@ -2,6 +2,7 @@
 
 namespace app\modules\admin\controllers;
 
+use app\components\services\QualityIndexService;
 use app\models\repositories\CoefficientRepository;
 use app\models\repositories\IndicatorRepository;
 use Yii;
@@ -38,8 +39,11 @@ class QualityIndexController extends Controller
     public function actionIndex()
     {
         $dataProvider = new ActiveDataProvider([
-            'query' => QualityIndex::find(),
+            'query' => QualityIndex::find()
+                ->with(['laboratory'])
+                ->orderBy('id desc'),
         ]);
+        $dataProvider->pagination->pageSize = 50;
 
         return $this->render('index', [
             'dataProvider' => $dataProvider,
@@ -69,14 +73,16 @@ class QualityIndexController extends Controller
         $model = new QualityIndex();
 
         if ($model->load(Yii::$app->request->post())) {
-            $coefficients = CoefficientRepository::getAll();
             $indicators = IndicatorRepository::getLastIndicatorsInLaboratory($model->laboratory_id);
-            var_dump("<pre>");
-            var_dump($indicators);
-            var_dump("</pre>");
-            die();
-            $model->save();
-            return $this->redirect(['view', 'id' => $model->id]);
+
+            $indicator = QualityIndexService::getIndices($indicators);
+
+            $model->date = time();
+            $model->value = $indicator;
+
+            if ($model->validate()) $model->save();
+
+            return $this->redirect(['quality-index/index']);
         }
 
         return $this->render('create', [

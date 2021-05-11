@@ -1,5 +1,7 @@
 <?php
 
+use app\components\services\QualityIndexService;
+use app\models\repositories\IndicatorRepository;
 use yii\db\Migration;
 
 /**
@@ -35,6 +37,52 @@ class m210425_100042_create_indicators_table extends Migration
             'laboratory_id',
             'laboratories',
             'id');
+
+
+        $start = 1609452001;
+
+        for($i = $start; $i < time(); $i+=3600){
+            $laboratoryId = rand(1,\app\models\Laboratory::find()->count());
+
+            $this->insert($this->table_name,[
+                'date' => $i,
+                'indicator_type_id' => 1,
+                'laboratory_id' => $laboratoryId,
+                'value' => rand(0,800)
+            ]);
+            $this->insert($this->table_name,[
+                'date' => $i,
+                'indicator_type_id' => 2,
+                'laboratory_id' => $laboratoryId,
+                'value' => rand(0,1000)
+            ]);
+            $this->insert($this->table_name,[
+                'date' => $i,
+                'indicator_type_id' => 3,
+                'laboratory_id' => $laboratoryId,
+                'value' => rand(0,1250)
+            ]);
+            $this->insert($this->table_name,[
+                'date' => $i,
+                'indicator_type_id' => 4,
+                'laboratory_id' => $laboratoryId,
+                'value' => rand(0,1200)
+            ]);
+            $this->insert($this->table_name,[
+                'date' => $i,
+                'indicator_type_id' => 5,
+                'laboratory_id' => $laboratoryId,
+                'value' => rand(0,800)
+            ]);
+
+            $indicators = IndicatorRepository::getLastIndicatorsInLaboratory($laboratoryId);
+            $indicator = QualityIndexService::getIndices($indicators);
+            $this->insert('quality_indices',[
+                'date' => $i,
+                'laboratory_id' => $laboratoryId,
+                'value' => $indicator
+            ]);
+        }
     }
 
     /**

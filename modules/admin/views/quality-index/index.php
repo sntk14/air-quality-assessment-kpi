@@ -24,8 +24,18 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\SerialColumn'],
 
             'id',
-            'date',
-            'laboratory_id',
+            [
+                    'attribute' => 'date',
+                'value' => function ($model) {
+                    return date('h-i d-m-Y',$model->date);
+                }
+            ],
+            [
+                'attribute' => 'laboratory_id',
+                'value' => function($model){
+                    return $model->laboratory->street.' ['.$model->laboratory->city.']';
+                }
+            ],
             'value',
 
             ['class' => 'yii\grid\ActionColumn'],

@@ -19,6 +19,18 @@ class m210425_100007_create_laboratories_table extends Migration
             'city' => $this->string(),
             'street' => $this->string()
         ]);
+
+        $data = [
+            ['city' => 'Київ', 'street' => 'Подільський'],
+            ['city' => 'Київ', 'street' => 'Оболонський'],
+            ['city' => 'Київ', 'street' => 'Дніпровський'],
+            ['city' => 'Київ', 'street' => 'Святошинський'],
+            ['city' => 'Київ', 'street' => 'Соломенський'],
+        ];
+
+        foreach ($data as $item){
+            $this->insert($this->table_name,$item);
+        }
     }
 
     /**

@@ -5,7 +5,7 @@ use yii\db\Migration;
 /**
  * Handles the creation of table `{{%quality_indices}}`.
  */
-class m210425_100244_create_quality_indices_table extends Migration
+class m210425_100041_create_quality_indices_table extends Migration
 {
     private $table_name = '{{%quality_indices}}';
 

@@ -31,7 +31,9 @@ $this->params['breadcrumbs'][] = $this->title;
         'attributes' => [
             'id',
             'indicator_type_id',
-            'value',
+            'min',
+            'max',
+            'level',
         ],
     ]) ?>
 

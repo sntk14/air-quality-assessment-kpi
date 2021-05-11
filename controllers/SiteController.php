@@ -2,7 +2,12 @@
 
 namespace app\controllers;
 
+use app\models\Indicator;
+use app\models\Laboratory;
+use app\models\QualityIndex;
 use Yii;
+use yii\data\ActiveDataProvider;
+use yii\helpers\ArrayHelper;
 use yii\web\Response;
 use app\models\LoginForm;
 use app\models\ContactForm;
@@ -17,9 +22,43 @@ class SiteController extends CController
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        $laboratories = Laboratory::find()->all();
+
+        return $this->render('index',[
+            'laboratories' => $laboratories
+        ]);
     }
 
+    public function actionLaboratory($id)
+    {
+        $chartData = [];
+        $labels = [];
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => QualityIndex::find()
+                ->where(['laboratory_id' => $id])
+                ->orderBy('id desc'),
+        ]);
+        $dataProvider->pagination->pageSize = 50;
+
+        $indicators = QualityIndex::find()
+            ->select(['value','date'])
+            ->where(['laboratory_id' => $id])
+            ->all();
+
+        $chartData = array_values(ArrayHelper::map($indicators, 'value', 'value'));
+
+        $step = (int)floor(count($indicators) / 15);
+        for ($i = 0; $i < 15; $i++) {
+            $labels[] = date('d-n-Y', $indicators[$i * $step]->date);
+        }
+
+        return $this->renderPartial('laboratory', [
+            'dataProvider' => $dataProvider,
+            'data' => $chartData,
+            'labels' => $labels
+        ]);
+    }
 
     public function actionLogin()
     {

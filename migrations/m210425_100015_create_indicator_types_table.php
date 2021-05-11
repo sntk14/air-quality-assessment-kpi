@@ -17,6 +17,19 @@ class m210425_100015_create_indicator_types_table extends Migration
             'id' => $this->primaryKey()->unsigned(),
             'name' => $this->string()
         ]);
+
+
+        $data = [
+            ['name' => 'O3'],
+            ['name' => 'NO2'],
+            ['name' => 'SO2'],
+            ['name' => 'PM10'],
+            ['name' => 'PM2.5'],
+        ];
+
+        foreach ($data as $item){
+            $this->insert($this->table_name,$item);
+        }
     }
 
     /**

@@ -30,7 +30,9 @@ $this->params['breadcrumbs'][] = $this->title;
                     return $model->indicatorType->name;
                 }
             ],
-            'value',
+            'min',
+            'max',
+            'level',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],
